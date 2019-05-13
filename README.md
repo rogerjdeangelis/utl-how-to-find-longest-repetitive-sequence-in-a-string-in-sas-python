@@ -84,7 +84,7 @@
     SAS, we don't have to because it's already available in the form of the hash object,
     making coding LRS a simple in-and-out procedure:
 
-    %let s = worldprogrammingsasinstituteworldprogrammingoracleteradataworldprogramming ;
+    %let s = ij1234kAAbcAAb1234pq ;
 
     proc fcmp outlib=work.f.f ;
     function LRS (s $) $ ;
@@ -101,7 +101,7 @@
         q = compare (hs, z) ;
         if q > qm then do ;
           qm = q ;
-          sm = z ;
+          sm = substr (z, 1, q - 1) ; /* the corrected expression */
         end ;
         z = hs ;
       end ;
@@ -112,7 +112,6 @@
     option cmplib=work.f ;
 
     %put lrs = %sysfunc (LRS (&s)) ;
-
     Paul
 
 
