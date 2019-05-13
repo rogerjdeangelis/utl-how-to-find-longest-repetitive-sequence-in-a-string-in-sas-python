@@ -1,6 +1,12 @@
-How to find longest repetitive sequence in a string in SAS Python
+How to find longest repetitive sequence in a string in SAS Python How to find longest repetitive sequence in a string in SAS Python
 
-  Method
+  Two Solutions
+
+    I. Elegant and simple application of a HASH (a natural for the HASH)
+       by Paul Dorfman  sashole@bellsouth.net
+
+
+   II. SAS integration with Python a function
 
      1. Create macro string to pass to Python
         %let bigStr=worldprogrammingsasinstituteoracleteradataworldprogramming;
@@ -54,6 +60,66 @@ FROMPY = worldprogramming
 |_|
 ;
 
+*********************************************
+I. Elegant and simple applivation of a HASH *
+*********************************************
+
+
+Roger,MP
+
+A very nice demo on how to tap into Python for a function SAS doesn't seem to have already canned.
+
+However, even though the LRS (Longest Repeated Substring) function is not yet canned,
+it's simple to can via FCMP. Furthermore, the availability of the hash object, which allows to
+insert items in a sorted order at O(1) time, makes it easy to implement LRS running in O(N) time
+(where N is the length of the string).
+
+The naive approach of comparing every substring with every other substring would obviously
+run in O(N**2) time, so it won't scale. The usual method of avoiding this is to create a
+prefix array, sort it, and then compare N adjacent prefixes. The need to sort results in
+O(N*log(N)) run time - obviously much better than the quadratic time. To improve on that
+and avoid the sort, the us
+ual approach is to build a prefix tree, which is quite involved, to say at least. But with
+SAS, we don't have to because it's already available in the form of the hash object,
+making coding LRS a simple in-and-out procedure:
+
+%let s = ij1234kAAbcAAb1234pq ;
+
+proc fcmp outlib=work.f.f ;
+function LRS (s $) $ ;
+  declare hash h (ordered:"a") ;
+  rc = h.definekey ("hs") ;
+  rc = h.definedone () ;
+  declare hiter i ("h") ;
+  do q = 1 to length (s) ;
+    hs = substr (s, q) ;
+    rc = h.add() ;
+  end ;
+  z = s ;
+  do while (i.next() = 0) ;
+    q = compare (hs, z) ;
+    if q > qm then do ;
+      qm = q ;
+      sm = substr (z, 1, q - 1) ; /* the corrected expression */
+
+
+    end ;
+    z = hs ;
+  end ;
+  return (sm) ;
+endsub ;
+quit ;
+
+option cmplib=work.f ;
+
+%put lrs = %sysfunc (LRS (&s)) ;
+Paul
+
+
+*******************************************
+II. SAS integration with Python function  *
+*******************************************
+
 %let bigStr=worldprogrammingsasinstituteoracleteradataworldprogramming;
 
 %put &=bigstr;
@@ -88,4 +154,6 @@ pyperclip.copy(txt);
 %put &=frompy;
 
 FROMPY = worldprogramming
+
+
 
