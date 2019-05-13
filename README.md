@@ -7,7 +7,7 @@ How to find longest repetitive sequence in a string in SAS Python How to find lo
        by Paul Dorfman  sashole@bellsouth.net
 
 
-   II. SAS intrgarion with Python function
+   II. SAS integration with a Python function
 
      1. Create macro string to pass to Python
         %let bigStr=worldprogrammingsasinstituteoracleteradataworldprogramming;
@@ -117,7 +117,7 @@ Paul
 
 
 *******************************************
-II. SAS integrarion with Python function  *
+II. SAS integration with Python function  *
 *******************************************
 
 %let bigStr=worldprogrammingsasinstituteoracleteradataworldprogramming;
